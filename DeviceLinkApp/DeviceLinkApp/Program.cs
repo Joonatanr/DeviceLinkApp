@@ -18,48 +18,22 @@ namespace DeviceLinkApp
             BackgroundWorker senderWorker = new BackgroundWorker();
             senderWorker.DoWork += new DoWorkEventHandler(SenderThread);
             senderWorker.RunWorkerAsync();
-            
-            //Creates a UdpClient for reading incoming data.
-            UdpClient receivingUdpClient = new UdpClient(DLPort);
-
-            //Creates an IPEndPoint to record the IP Address and port number of the sender.
-            // The IPEndPoint will allow you to read datagrams sent from any source.
-            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
-
-            while (true)
-            {
-                try
-                {
-                    // Blocks until a message returns on this socket from a remote host.
-                    Byte[] receiveBytes = receivingUdpClient.Receive(ref RemoteIpEndPoint);
-
-                    string returnData = Encoding.ASCII.GetString(receiveBytes);
-
-                    Console.WriteLine("This is the message you received " +
-                                              returnData.ToString());
-                    Console.WriteLine("This message was sent from " +
-                                                RemoteIpEndPoint.Address.ToString() +
-                                                " on their port number " +
-                                                RemoteIpEndPoint.Port.ToString());
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
-            }
 
             Console.ReadLine();
+
+            /* TODO : Clean up connections etc.... */
         }
 
         private static void SenderThread(object sender, DoWorkEventArgs args )
         {
             UdpClient udpClient = new UdpClient();
+            IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 1711);
+
+            udpClient.Client.ReceiveTimeout = 4000;
 
             while (true)
             {
                 System.Threading.Thread.Sleep(2000);
-                //Byte[] sendBytes = Encoding.ASCII.GetBytes("R/40/81\\1.6e-1");
-                //Byte[] sendBytes = Encoding.ASCII.GetBytes("R/40");
 
                 Byte[] sendBytes1 = Encoding.ASCII.GetBytes("R/115");
                 Byte[] sendBytes2 = Encoding.ASCII.GetBytes("R/103");
@@ -69,10 +43,23 @@ namespace DeviceLinkApp
                     udpClient.Send(sendBytes1, sendBytes1.Length, "192.168.1.164", DLPort);
                     udpClient.Send(sendBytes2, sendBytes2.Length, "192.168.1.164", DLPort);
                     udpClient.Send(sendBytes3, sendBytes3.Length, "192.168.1.164", DLPort);
+
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.ToString());
+                    Console.WriteLine("Tx failed");
+                    //Console.WriteLine(e.ToString());
+                }
+
+                try
+                {
+                    byte[] received = udpClient.Receive(ref remoteEndPoint);
+                    Console.WriteLine(Encoding.UTF8.GetString(received));
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Rx failed");
+                    //Console.WriteLine(e.ToString());
                 }
             }
         }
