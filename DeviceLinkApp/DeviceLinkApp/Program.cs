@@ -11,6 +11,8 @@ namespace DeviceLinkApp
 {
     class Program
     {
+        private const int DLPort = 10000;
+
         static void Main(string[] args)
         {
             BackgroundWorker senderWorker = new BackgroundWorker();
@@ -19,11 +21,11 @@ namespace DeviceLinkApp
             
             
             //Creates a UdpClient for reading incoming data.
-            UdpClient receivingUdpClient = new UdpClient(8081);
+            UdpClient receivingUdpClient = new UdpClient(DLPort);
 
             //Creates an IPEndPoint to record the IP Address and port number of the sender.
             // The IPEndPoint will allow you to read datagrams sent from any source.
-            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, DLPort);
 
             while (true)
             {
@@ -57,10 +59,11 @@ namespace DeviceLinkApp
             while (true)
             {
                 System.Threading.Thread.Sleep(500);
-                Byte[] sendBytes = Encoding.ASCII.GetBytes("Is anybody there");
+                Byte[] sendBytes = Encoding.ASCII.GetBytes("R/40/81\\1.6e-1");
                 try
                 {
-                    udpClient.Send(sendBytes, sendBytes.Length, "127.0.0.1", 8081);
+                    udpClient.Send(sendBytes, sendBytes.Length, "127.0.0.1", DLPort);
+                    //udpClient.Send(sendBytes, sendBytes.Length, "192.168.0.101", DLPort);
                 }
                 catch (Exception e)
                 {
