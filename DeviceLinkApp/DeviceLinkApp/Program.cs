@@ -63,11 +63,12 @@ namespace DeviceLinkApp
 
                 Byte[] sendBytes1 = Encoding.ASCII.GetBytes("R/115");
                 Byte[] sendBytes2 = Encoding.ASCII.GetBytes("R/103");
+                Byte[] sendBytes3 = Encoding.ASCII.GetBytes("R/40");
                 try
                 {
-                    udpClient.Send(sendBytes1, sendBytes1.Length, "127.0.0.1", DLPort);
-                    udpClient.Send(sendBytes2, sendBytes2.Length, "127.0.0.1", DLPort);
-                    //udpClient.Send(sendBytes, sendBytes.Length, "192.168.0.101", DLPort);
+                    udpClient.Send(sendBytes1, sendBytes1.Length, "192.168.1.164", DLPort);
+                    udpClient.Send(sendBytes2, sendBytes2.Length, "192.168.1.164", DLPort);
+                    udpClient.Send(sendBytes3, sendBytes3.Length, "192.168.1.164", DLPort);
                 }
                 catch (Exception e)
                 {
