@@ -37,7 +37,12 @@ namespace DeviceLinkGui
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxAirspeed = new System.Windows.Forms.TextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.comboBoxCOMPorts = new System.Windows.Forms.ComboBox();
+            this.buttonOpenCOM = new System.Windows.Forms.Button();
+            this.buttonCloseComm = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // richTextBox1
@@ -99,11 +104,52 @@ namespace DeviceLinkGui
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.buttonCloseComm);
+            this.groupBox2.Controls.Add(this.buttonOpenCOM);
+            this.groupBox2.Controls.Add(this.comboBoxCOMPorts);
+            this.groupBox2.Location = new System.Drawing.Point(12, 12);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(253, 185);
+            this.groupBox2.TabIndex = 4;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "COM port";
+            // 
+            // comboBoxCOMPorts
+            // 
+            this.comboBoxCOMPorts.FormattingEnabled = true;
+            this.comboBoxCOMPorts.Location = new System.Drawing.Point(87, 28);
+            this.comboBoxCOMPorts.Name = "comboBoxCOMPorts";
+            this.comboBoxCOMPorts.Size = new System.Drawing.Size(160, 21);
+            this.comboBoxCOMPorts.TabIndex = 0;
+            // 
+            // buttonOpenCOM
+            // 
+            this.buttonOpenCOM.Location = new System.Drawing.Point(6, 26);
+            this.buttonOpenCOM.Name = "buttonOpenCOM";
+            this.buttonOpenCOM.Size = new System.Drawing.Size(75, 23);
+            this.buttonOpenCOM.TabIndex = 1;
+            this.buttonOpenCOM.Text = "Open";
+            this.buttonOpenCOM.UseVisualStyleBackColor = true;
+            this.buttonOpenCOM.Click += new System.EventHandler(this.buttonOpenCOM_Click);
+            // 
+            // buttonCloseComm
+            // 
+            this.buttonCloseComm.Location = new System.Drawing.Point(6, 55);
+            this.buttonCloseComm.Name = "buttonCloseComm";
+            this.buttonCloseComm.Size = new System.Drawing.Size(75, 23);
+            this.buttonCloseComm.TabIndex = 2;
+            this.buttonCloseComm.Text = "Close";
+            this.buttonCloseComm.UseVisualStyleBackColor = true;
+            this.buttonCloseComm.Click += new System.EventHandler(this.buttonCloseComm_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(534, 398);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.richTextBox1);
             this.Name = "Form1";
@@ -111,6 +157,7 @@ namespace DeviceLinkGui
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -124,6 +171,10 @@ namespace DeviceLinkGui
         private System.Windows.Forms.TextBox textBoxAirspeed;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button buttonCloseComm;
+        private System.Windows.Forms.Button buttonOpenCOM;
+        private System.Windows.Forms.ComboBox comboBoxCOMPorts;
     }
 }
 

@@ -20,6 +20,7 @@ namespace DeviceLinkGui
 
         public float CurrentAirspeed = 0.0f;
         public float CurrentAltitude = 0.0f;
+        public bool CurrentGearStatus = false;
 
         public DeviceLinkHandler(int port)
         {
@@ -76,7 +77,7 @@ namespace DeviceLinkGui
 
                 Byte[] sendBytes1 = Encoding.ASCII.GetBytes("R/115");
                 Byte[] sendBytes2 = Encoding.ASCII.GetBytes("R/103");
-                Byte[] sendBytes3 = Encoding.ASCII.GetBytes("R/40/30");
+                Byte[] sendBytes3 = Encoding.ASCII.GetBytes("R/40/30/56/58/60");
                 try
                 {
                     //udpClient.Send(sendBytes1, sendBytes1.Length, "192.168.1.164", DLPort);
@@ -140,6 +141,25 @@ namespace DeviceLinkGui
                     CurrentAltitude = parsedValue;
                 }
             }
+
+            if (myDictionary.Keys.Contains(56))
+            {
+                val = myDictionary[56];
+                float parsedValue;
+                if (float.TryParse(val, out parsedValue))
+                {
+                    if (parsedValue > 0.0f)
+                    {
+                        CurrentGearStatus = true;
+                    }
+                    else
+                    {
+                        CurrentGearStatus = false;
+                    }
+                }
+            }
+
+
         }
 
         private Dictionary<int, string> parseReceivePacket(byte[] packet)
