@@ -21,6 +21,8 @@ namespace DeviceLinkGui
             dHandler = new DeviceLinkHandler(1711);
             dHandler.TextPrinter = new DeviceLinkHandler.printHandler(printText);
             dHandler.Run();
+
+            timer1.Start();
         }
 
         private void printText(string str)
@@ -47,6 +49,15 @@ namespace DeviceLinkGui
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             dHandler.Close();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if (dHandler != null)
+            {
+                textBoxAirspeed.Text = dHandler.CurrentAirspeed.ToString();
+                textBoxAltitude.Text = dHandler.CurrentAltitude.ToString();
+            }
         }
     }
 }
