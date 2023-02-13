@@ -22,6 +22,46 @@ namespace DeviceLinkGui
         public float CurrentAltitude = 0.0f;
         public bool CurrentGearStatus = false;
 
+        /* Simplistic implementation. Just for demo. */
+        private bool _engineState = false;
+        private bool _engineStateChanged = false;
+
+        public bool EngineState 
+        {
+            get 
+            {
+                return _engineState;
+            }
+
+            set
+            {
+                if (_engineState != value)
+                {
+                    _engineState = value;
+                    _engineStateChanged = true;
+                }
+            }
+        }
+
+        private int _enginePower = 0;
+        private bool _enginePowerChanged = false;
+        public int EnginePower
+        {
+            get
+            {
+                return (int)_enginePower;
+            }
+
+            set
+            {
+                if (_enginePower != value)
+                {
+                    _enginePower = value;
+                    _enginePowerChanged = true;
+                }
+            }
+        }
+
         public DeviceLinkHandler(int port)
         {
             //Constructor
@@ -64,12 +104,16 @@ namespace DeviceLinkGui
             isStop = true;
         }
 
+        private int debug_ix = 0;
+
         private void SenderThread()
         {
             UdpClient udpClient = new UdpClient();
             IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, 1711);
+            
 
             udpClient.Client.ReceiveTimeout = 1000;
+
 
             while (isStop == false)
             {
@@ -77,7 +121,14 @@ namespace DeviceLinkGui
 
                 Byte[] sendBytes1 = Encoding.ASCII.GetBytes("R/115");
                 Byte[] sendBytes2 = Encoding.ASCII.GetBytes("R/103");
-                Byte[] sendBytes3 = Encoding.ASCII.GetBytes("R/40/30/56/58/60");
+                Byte[] sendBytes3 = Encoding.ASCII.GetBytes("R/40/30/56/58/60/80");
+
+                float rawEnginePower = (float)_enginePower / 100;
+                rawEnginePower *= 2;
+                rawEnginePower = rawEnginePower - 1.00f;
+
+                Byte[] sendBytes4 = Encoding.ASCII.GetBytes("R/81\\" + rawEnginePower.ToString());
+
                 try
                 {
                     //udpClient.Send(sendBytes1, sendBytes1.Length, "192.168.1.164", DLPort);
@@ -86,9 +137,24 @@ namespace DeviceLinkGui
 
                     //udpClient.Send(sendBytes1, sendBytes1.Length, myIp, DLPort);
                     //udpClient.Send(sendBytes2, sendBytes2.Length, myIp, DLPort);
+
+
+                    if (_engineStateChanged)
+                    {
+                        _engineStateChanged = false;
+                        udpClient.Send(sendBytes1, sendBytes1.Length, myIp, myPort);
+                        udpClient.Send(sendBytes2, sendBytes2.Length, myIp, myPort);
+                    }
+
+                    if (_enginePowerChanged)
+                    {
+                        _enginePowerChanged = false;
+                        debugPrintLine(System.Text.Encoding.UTF8.GetString(sendBytes4, 0, sendBytes4.Length));
+                        udpClient.Send(sendBytes4, sendBytes4.Length, myIp, myPort);
+                    }
+                    
+                    /* Read out data over devicelink. */
                     udpClient.Send(sendBytes3, sendBytes3.Length, myIp, myPort);
-
-
                 }
                 catch (Exception e)
                 {
@@ -101,8 +167,13 @@ namespace DeviceLinkGui
                 {
                     byte[] received = udpClient.Receive(ref remoteEndPoint);
                     handleReceivedPacket(received);
-                    //debugPrintLine(Encoding.UTF8.GetString(received));
-                    //Console.WriteLine(Encoding.UTF8.GetString(received));
+
+                    debug_ix++;
+                    if (debug_ix == 10)
+                    {
+                        debug_ix = 0;
+                        debugPrintLine(Encoding.UTF8.GetString(received));
+                    }
                 }
                 catch (Exception e)
                 {

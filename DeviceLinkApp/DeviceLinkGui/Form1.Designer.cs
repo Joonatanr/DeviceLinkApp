@@ -34,13 +34,17 @@ namespace DeviceLinkGui
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxAltitude = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.textBoxAirspeed = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.comboBoxCOMPorts = new System.Windows.Forms.ComboBox();
-            this.buttonOpenCOM = new System.Windows.Forms.Button();
             this.buttonCloseComm = new System.Windows.Forms.Button();
+            this.buttonOpenCOM = new System.Windows.Forms.Button();
+            this.comboBoxCOMPorts = new System.Windows.Forms.ComboBox();
+            this.textBoxEnginePower = new System.Windows.Forms.TextBox();
+            this.textBoxEngineState = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -73,6 +77,10 @@ namespace DeviceLinkGui
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.textBoxEngineState);
+            this.groupBox1.Controls.Add(this.textBoxEnginePower);
             this.groupBox1.Controls.Add(this.textBoxAirspeed);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.textBoxAltitude);
@@ -84,6 +92,13 @@ namespace DeviceLinkGui
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Telemetry";
             // 
+            // textBoxAirspeed
+            // 
+            this.textBoxAirspeed.Location = new System.Drawing.Point(152, 49);
+            this.textBoxAirspeed.Name = "textBoxAirspeed";
+            this.textBoxAirspeed.Size = new System.Drawing.Size(93, 20);
+            this.textBoxAirspeed.TabIndex = 4;
+            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -92,13 +107,6 @@ namespace DeviceLinkGui
             this.label2.Size = new System.Drawing.Size(48, 13);
             this.label2.TabIndex = 3;
             this.label2.Text = "Airspeed";
-            // 
-            // textBoxAirspeed
-            // 
-            this.textBoxAirspeed.Location = new System.Drawing.Point(152, 49);
-            this.textBoxAirspeed.Name = "textBoxAirspeed";
-            this.textBoxAirspeed.Size = new System.Drawing.Size(93, 20);
-            this.textBoxAirspeed.TabIndex = 4;
             // 
             // timer1
             // 
@@ -116,13 +124,15 @@ namespace DeviceLinkGui
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "COM port";
             // 
-            // comboBoxCOMPorts
+            // buttonCloseComm
             // 
-            this.comboBoxCOMPorts.FormattingEnabled = true;
-            this.comboBoxCOMPorts.Location = new System.Drawing.Point(87, 28);
-            this.comboBoxCOMPorts.Name = "comboBoxCOMPorts";
-            this.comboBoxCOMPorts.Size = new System.Drawing.Size(160, 21);
-            this.comboBoxCOMPorts.TabIndex = 0;
+            this.buttonCloseComm.Location = new System.Drawing.Point(6, 55);
+            this.buttonCloseComm.Name = "buttonCloseComm";
+            this.buttonCloseComm.Size = new System.Drawing.Size(75, 23);
+            this.buttonCloseComm.TabIndex = 2;
+            this.buttonCloseComm.Text = "Close";
+            this.buttonCloseComm.UseVisualStyleBackColor = true;
+            this.buttonCloseComm.Click += new System.EventHandler(this.buttonCloseComm_Click);
             // 
             // buttonOpenCOM
             // 
@@ -134,15 +144,45 @@ namespace DeviceLinkGui
             this.buttonOpenCOM.UseVisualStyleBackColor = true;
             this.buttonOpenCOM.Click += new System.EventHandler(this.buttonOpenCOM_Click);
             // 
-            // buttonCloseComm
+            // comboBoxCOMPorts
             // 
-            this.buttonCloseComm.Location = new System.Drawing.Point(6, 55);
-            this.buttonCloseComm.Name = "buttonCloseComm";
-            this.buttonCloseComm.Size = new System.Drawing.Size(75, 23);
-            this.buttonCloseComm.TabIndex = 2;
-            this.buttonCloseComm.Text = "Close";
-            this.buttonCloseComm.UseVisualStyleBackColor = true;
-            this.buttonCloseComm.Click += new System.EventHandler(this.buttonCloseComm_Click);
+            this.comboBoxCOMPorts.FormattingEnabled = true;
+            this.comboBoxCOMPorts.Location = new System.Drawing.Point(87, 28);
+            this.comboBoxCOMPorts.Name = "comboBoxCOMPorts";
+            this.comboBoxCOMPorts.Size = new System.Drawing.Size(160, 21);
+            this.comboBoxCOMPorts.TabIndex = 0;
+            // 
+            // textBoxEnginePower
+            // 
+            this.textBoxEnginePower.Location = new System.Drawing.Point(152, 112);
+            this.textBoxEnginePower.Name = "textBoxEnginePower";
+            this.textBoxEnginePower.Size = new System.Drawing.Size(93, 20);
+            this.textBoxEnginePower.TabIndex = 5;
+            // 
+            // textBoxEngineState
+            // 
+            this.textBoxEngineState.Location = new System.Drawing.Point(152, 138);
+            this.textBoxEngineState.Name = "textBoxEngineState";
+            this.textBoxEngineState.Size = new System.Drawing.Size(93, 20);
+            this.textBoxEngineState.TabIndex = 6;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(73, 115);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(73, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Engine Power";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(73, 141);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(68, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Engine State";
             // 
             // Form1
             // 
@@ -175,6 +215,10 @@ namespace DeviceLinkGui
         private System.Windows.Forms.Button buttonCloseComm;
         private System.Windows.Forms.Button buttonOpenCOM;
         private System.Windows.Forms.ComboBox comboBoxCOMPorts;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox textBoxEngineState;
+        private System.Windows.Forms.TextBox textBoxEnginePower;
     }
 }
 

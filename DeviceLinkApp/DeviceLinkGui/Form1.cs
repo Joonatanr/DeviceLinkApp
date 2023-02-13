@@ -43,6 +43,7 @@ namespace DeviceLinkGui
                 else
                 {
                     richTextBox1.AppendText(str);
+                    richTextBox1.ScrollToCaret();
                 }
             }
             catch (Exception)
@@ -73,16 +74,91 @@ namespace DeviceLinkGui
                     {
                         int gearValue = dHandler.CurrentGearStatus ? 1 : 0;
                         mySerialPort.WriteLine("S" + servoVal.ToString() + "G" + gearValue.ToString());
+
+                        string res = mySerialPort.ReadLine();
+                        //textBoxEngineState.Text = res;
+                        int power;
+                        bool engineState;
+                        
+                        if(parseArduinoInputValues(res, out power, out engineState) == true)
+                        {
+                            textBoxEnginePower.Text = power.ToString();
+                            
+                            if (engineState)
+                            {
+                                textBoxEngineState.Text = "ON";
+                            }
+                            else
+                            {
+                                textBoxEngineState.Text = "OFF";
+                            }
+
+                            //textBoxEngineState.Text = res;
+                            dHandler.EnginePower = power;
+                            dHandler.EngineState = engineState;
+                        }
                     }
                 }
             }
         }
+
+        private bool parseArduinoInputValues(string str, out int power, out bool engineState)
+        {
+            int x = 1;
+            string enginePowerString = "";
+            if (str[0] == 'P')
+            {
+                while (char.IsDigit(str[x]))
+                {
+                    enginePowerString += str[x];
+                    x++;
+                }
+
+                if(str[x] == 'I')
+                {
+                    if (str[x + 1] == '1') 
+                    {
+                        engineState = true;
+                    }
+                    else
+                    {
+                        engineState = false;
+                    }
+
+                    power = int.Parse(enginePowerString);
+                    return true;
+
+                }
+                else
+                {
+                    power = 0;
+                    engineState = false;
+                    return false;
+                }
+
+            }
+            else
+            {
+                power = 0;
+                engineState = false;
+                return false;
+            }
+        }
+
 
         private void buttonOpenCOM_Click(object sender, EventArgs e)
         {
             if (comboBoxCOMPorts.SelectedIndex > -1)
             {
                 mySerialPort = new SerialPort(comboBoxCOMPorts.SelectedItem.ToString(), 115200);
+                mySerialPort.NewLine = "\n";
+                // Set the read/write timeouts
+                mySerialPort.ReadTimeout = 500;
+                mySerialPort.WriteTimeout = 500;
+                mySerialPort.Parity = Parity.None;
+                mySerialPort.StopBits = StopBits.One;
+                mySerialPort.RtsEnable = true;
+                mySerialPort.DtrEnable = true;
                 try
                 {
                     mySerialPort.Open();
