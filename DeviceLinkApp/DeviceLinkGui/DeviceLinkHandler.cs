@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -197,7 +198,7 @@ namespace DeviceLinkGui
             {
                 val = myDictionary[30];
                 float parsedValue;
-                if (float.TryParse(val, out parsedValue))
+                if (float.TryParse(val, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedValue))
                 {
                     CurrentAirspeed = parsedValue;
                 }
@@ -207,7 +208,7 @@ namespace DeviceLinkGui
             {
                 val = myDictionary[40];
                 float parsedValue;
-                if (float.TryParse(val, out parsedValue))
+                if (float.TryParse(val, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedValue))
                 {
                     CurrentAltitude = parsedValue;
                 }
@@ -217,7 +218,7 @@ namespace DeviceLinkGui
             {
                 val = myDictionary[56];
                 float parsedValue;
-                if (float.TryParse(val, out parsedValue))
+                if (float.TryParse(val, NumberStyles.Any, CultureInfo.InvariantCulture, out parsedValue))
                 {
                     if (parsedValue > 0.0f)
                     {
