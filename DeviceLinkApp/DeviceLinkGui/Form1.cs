@@ -36,8 +36,8 @@ namespace DeviceLinkGui
             {
                 if (this.richTextBox1.InvokeRequired)
                 {
-                    // Call this same method but append THREAD2 to the text
-                    Action safeWrite = delegate { printText($"{str} (THREAD2)"); };
+                    // Call this same method.
+                    Action safeWrite = delegate { printText(str); };
                     richTextBox1.Invoke(safeWrite);
                 }
                 else
@@ -74,29 +74,7 @@ namespace DeviceLinkGui
                     {
                         int gearValue = dHandler.CurrentGearStatus ? 1 : 0;
                         mySerialPort.WriteLine("S" + servoVal.ToString() + "G" + gearValue.ToString());
-
-                        string res = mySerialPort.ReadLine();
-                        //textBoxEngineState.Text = res;
-                        int power;
-                        bool engineState;
-                        
-                        if(parseArduinoInputValues(res, out power, out engineState) == true)
-                        {
-                            textBoxEnginePower.Text = power.ToString();
-                            
-                            if (engineState)
-                            {
-                                textBoxEngineState.Text = "ON";
-                            }
-                            else
-                            {
-                                textBoxEngineState.Text = "OFF";
-                            }
-
-                            //textBoxEngineState.Text = res;
-                            dHandler.EnginePower = power;
-                            dHandler.EngineState = engineState;
-                        }
+                        //mySerialPort.WriteLine("S100");
                     }
                 }
             }
@@ -157,8 +135,10 @@ namespace DeviceLinkGui
                 mySerialPort.WriteTimeout = 500;
                 mySerialPort.Parity = Parity.None;
                 mySerialPort.StopBits = StopBits.One;
-                mySerialPort.RtsEnable = true;
-                mySerialPort.DtrEnable = true;
+                //mySerialPort.RtsEnable = true;
+                //mySerialPort.DtrEnable = true;
+                mySerialPort.DataReceived += MySerialPort_DataReceived;
+
                 try
                 {
                     mySerialPort.Open();
@@ -171,6 +151,36 @@ namespace DeviceLinkGui
             else
             {
                 MessageBox.Show("No serial port selected");
+            }
+        }
+
+        private void MySerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        {
+            string ArduinoReceiveText;
+
+            //printText(mySerialPort.ReadExisting());
+            //printText(mySerialPort.ReadLine() + "\n");
+            ArduinoReceiveText = mySerialPort.ReadLine();
+            
+            int power;
+            bool engineState;
+
+            if (parseArduinoInputValues(ArduinoReceiveText, out power, out engineState) == true)
+            {
+                textBoxEnginePower.Text = power.ToString();
+
+                if (engineState)
+                {
+                    textBoxEngineState.Text = "ON";
+                }
+                else
+                {
+                    textBoxEngineState.Text = "OFF";
+                }
+
+                //textBoxEngineState.Text = res;
+                dHandler.EnginePower = power;
+                dHandler.EngineState = engineState;
             }
         }
 

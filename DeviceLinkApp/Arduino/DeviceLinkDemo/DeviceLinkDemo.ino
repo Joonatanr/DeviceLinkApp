@@ -6,12 +6,12 @@
 #define LED2_PIN 11
 #define POT_PIN A1
 
+const unsigned int MAX_MESSAGE_LENGTH = 128;
 
 Servo myServo;  // create servo object to control a servo
 // twelve servo objects can be created on most boards
 
 int pos = 0;    // variable to store the servo position
-String myString;
 
 void setup() 
 {
@@ -28,21 +28,39 @@ void loop()
 {
   int val;
   
-  //val = analogRead(-);            // reads the value of the potentiometer (value between 0 and 1023)
-  //val = map(val, 0, 1023, 0, 180);     // scale it to use it with the servo (value between 0 and 180)
-  //myServo.write(val);                  // sets the servo position according to the scaled value
+  if (Serial.available() > 0)
+  {
+      //Create a place to hold the incoming message
+      static char message[MAX_MESSAGE_LENGTH];
+      static unsigned int message_pos = 0;
 
-  if (Serial.available())
-  { 
-    String teststr = Serial.readStringUntil('\n');  //read until newline
-    parseString(teststr);
-  }
+      //Read the next available byte in the serial receive buffer
+      char inByte = Serial.read();
+
+      //Message coming in (check not terminating character) and guard for over message size
+      if ( inByte != '\n' && (message_pos < MAX_MESSAGE_LENGTH - 1) )
+      {
+        //Add the incoming byte to our message
+        message[message_pos] = inByte;
+        message_pos++;
+      }
+      //Full message received...
+      else
+      {
+        //Add null character to string
+        message[message_pos] = '\0';
+      
+        //Print the message (or do other things)
+        //Serial.print("Re:");
+        //Serial.println(message);
+        parseString(message);
+
+        //Reset for the next message
+        message_pos = 0;
+      }
+    }
   
-  //Test the LEDs and switches,
-  //digitalWrite(LED1_PIN, digitalRead(SWITCH_PIN));
-  //digitalWrite(LED2_PIN, !digitalRead(SWITCH_PIN));
-  
-  delay(15);                           // waits for the servo to get there
+    delay(15);                           // waits for the servo to get there
 }
 
 
@@ -95,8 +113,7 @@ void parseString(String s)
           Serial.print(pot_state);
           Serial.print("I");
           Serial.print(switch_state);
-          Serial.print("\n");
-          //Serial.println("Yolo");     
+          Serial.print("\n");   
     }
   }
 }
